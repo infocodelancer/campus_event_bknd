@@ -26,7 +26,16 @@ public class SecurityConfig {
                                 "/api/users/verify",
                                 "/api/admins/register",
                                 "/api/admins/otp",
-                                "/api/admins/verify"
+                                "/api/admins/verify",
+                                // Swagger/OpenAPI paths - no authorization required
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs",
+                                "/swagger-resources/**",
+                                "/webjars/**",
+                                "/swagger/**",
+                                "/api-docs/**"
                         ).permitAll()
 
                         .requestMatchers("/api/admins/**")
