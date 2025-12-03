@@ -44,7 +44,7 @@ If Maven is not installed, install it:
 
 ## 📥 Clone the Project
 
-- Command
+- Command:
 
     git clone https://github.com/infocodelancer/campus_event_bknd.git
     cd event-backend
@@ -96,7 +96,7 @@ Or from IDE: - Open project → Run `EventApplication.java`
 
 ## 🛠 Build JAR File
 
-- Terminal
+- Terminal:
 
     mvn clean package
 
@@ -106,7 +106,7 @@ JAR file will be generated at:
 
 Run:
 
-- Terminal
+- Terminal:
 
     java -jar target/event-backend.jar
 
