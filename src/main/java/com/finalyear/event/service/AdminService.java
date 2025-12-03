@@ -38,6 +38,17 @@ public class AdminService {
         return otpService.verifyOtp(email, otp);
     }
 
+    public Admin getByEmail(String email) {
+        return adminRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
+    }
+
+    public boolean existsByEmail(String email) {
+        return adminRepository.findByEmail(email).isPresent();
+    }
+
+
+
     public Admin update(String adminId, AdminUpdateRequest request) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new RuntimeException("Admin not found"));

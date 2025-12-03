@@ -1,9 +1,11 @@
 package com.finalyear.event.controller;
 
+import com.finalyear.event.entity.User;
 import com.finalyear.event.payload.request.RegisterUserRequest;
 import com.finalyear.event.payload.request.UserUpdateRequest;
 import com.finalyear.event.payload.request.OtpRequest;
 import com.finalyear.event.payload.request.VerifyOtpRequest;
+import com.finalyear.event.payload.response.AuthResponse;
 import com.finalyear.event.security.JwtTokenProvider;
 import com.finalyear.event.service.OtpService;
 import com.finalyear.event.service.UserService;
@@ -35,13 +37,18 @@ public class UserController {
     // -------------------- SEND OTP --------------------
     @PostMapping("/otp")
     public ResponseEntity<?> sendOtp(@RequestBody OtpRequest request) {
+
+        boolean exists = userService.existsByEmail(request.getEmail());
+        if (!exists) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+
         otpService.generateAndSendOtp(request.getEmail());
-        return ResponseEntity.ok(
-                new MessageResponse("OTP sent to email successfully")
-        );
+        return ResponseEntity.ok("OTP sent to email successfully");
     }
 
-    // -------------------- VERIFY OTP + GENERATE TOKEN --------------------
+
+    // -------------------- VERIFY OTP + RETURN USER + TOKEN --------------------
     @PostMapping("/verify")
     public ResponseEntity<?> verify(@RequestBody VerifyOtpRequest req) {
 
@@ -49,12 +56,13 @@ public class UserController {
 
         if (!ok) {
             return ResponseEntity.status(400)
-                    .body(new MessageResponse("Invalid OTP"));
+                    .body("Invalid OTP");
         }
 
+        User user = userService.getByEmail(req.getEmail());
         String token = jwtTokenProvider.generateToken(req.getEmail(), "STUDENT");
 
-        return ResponseEntity.ok(new TokenResponse(token));
+        return ResponseEntity.ok(new AuthResponse(token, user));
     }
 
     // -------------------- UPDATE USER --------------------
@@ -65,10 +73,4 @@ public class UserController {
 
         return ResponseEntity.ok(userService.update(userId, request));
     }
-
-    // ----------- RESPONSE CLASSES -----------
-
-    private record TokenResponse(String token) {}
-
-    private record MessageResponse(String message) {}
 }

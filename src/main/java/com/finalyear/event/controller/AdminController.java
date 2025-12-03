@@ -4,6 +4,7 @@ import com.finalyear.event.entity.Admin;
 import com.finalyear.event.payload.request.AdminUpdateRequest;
 import com.finalyear.event.payload.request.OtpRequest;
 import com.finalyear.event.payload.request.VerifyOtpRequest;
+import com.finalyear.event.payload.response.AuthResponse;
 import com.finalyear.event.service.AdminService;
 import com.finalyear.event.service.OtpService;
 import com.finalyear.event.security.JwtTokenProvider;
@@ -32,21 +33,33 @@ public class AdminController {
     // Send OTP for login
     @PostMapping("/otp")
     public ResponseEntity<?> sendOtp(@RequestBody OtpRequest request) {
+
+        boolean exists = adminService.existsByEmail(request.getEmail());
+        if (!exists) {
+            return ResponseEntity.status(404).body("Admin not found");
+        }
+
         otpService.generateAndSendOtp(request.getEmail());
         return ResponseEntity.ok("OTP sent to email");
     }
 
+
     // Verify OTP
     @PostMapping("/verify")
-public ResponseEntity<?> verify(@RequestBody VerifyOtpRequest req) {
-    boolean ok = adminService.verifyOtp(req.getEmail(), req.getOtp());
+    public ResponseEntity<?> verify(@RequestBody VerifyOtpRequest req) {
+        boolean ok = adminService.verifyOtp(req.getEmail(), req.getOtp());
 
-    if (!ok) return ResponseEntity.status(400).body("Invalid OTP");
+        if (!ok) {
+            return ResponseEntity.status(400).body("Invalid OTP");
+        }
 
-    String token = jwtTokenProvider.generateToken(req.getEmail(), "ADMIN");
+        Admin admin = adminService.getByEmail(req.getEmail());  // fetch admin
 
-    return ResponseEntity.ok(token);
-}
+        String token = jwtTokenProvider.generateToken(req.getEmail(), "ADMIN");
+
+        return ResponseEntity.ok(new AuthResponse(token, admin));
+    }
+
 
 
     // Update admin info
