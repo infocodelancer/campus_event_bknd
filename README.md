@@ -45,15 +45,17 @@ If Maven is not installed, install it:
 ## 📥 Clone the Project
 
 - Command
-git clone https://github.com/infocodelancer/campus_event_bknd.git
-cd event-backend
+
+    git clone https://github.com/infocodelancer/campus_event_bknd.git
+    cd event-backend
 
 ------------------------------------------------------------------------
 
 ## ▶️ Run the Project
 
 - From terminal:
-mvn spring-boot:run
+
+    mvn spring-boot:run
 
 Or from IDE: - Open project → Run `EventApplication.java`
 
@@ -95,7 +97,8 @@ Or from IDE: - Open project → Run `EventApplication.java`
 ## 🛠 Build JAR File
 
 - Terminal
-mvn clean package
+
+    mvn clean package
 
 JAR file will be generated at:
 
@@ -104,7 +107,8 @@ JAR file will be generated at:
 Run:
 
 - Terminal
-java -jar target/event-backend.jar
+
+    java -jar target/event-backend.jar
 
 ------------------------------------------------------------------------
 
